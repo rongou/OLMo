@@ -1,26 +1,23 @@
 #!/bin/bash
+
 #SBATCH --job-name=olmo-1b-baseline
-#SBATCH --nodes=4
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=128
-#SBATCH --gres=gpu:8
-#SBATCH --network=infiniband
-#SBATCH --exclusive
+#SBATCH --nodes=16
+#SBATCH --ntasks-per-node=8
+#SBATCH --gpus-per-node=8
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=0
 #SBATCH --time=2:00:00
 #SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
 #SBATCH --error=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.err
 #SBATCH --account=sw_aidot
 #SBATCH --partition=batch_short
-#SBATCH --signal=SIGTERM@90 # Get notified 90 seconds before preemption
 #SBATCH --chdir=/lustre/fsw/portfolios/sw/users/rou/src/OLMo
 
 # Initialize micromamba
 source /home/rou/.bashrc
-
-# Activate olmo environment
 micromamba activate olmo
 
-# Create a unique directory for this job in /raid
+# Create a unique directory for this job in /raid/scratch
 export JOB_SCRATCH_DIR="/raid/scratch/$USER/job_${SLURM_JOB_ID}"
 mkdir -p "$JOB_SCRATCH_DIR"
 
@@ -33,26 +30,17 @@ mkdir -p "$HF_HOME" "$WANDB_DIR"
 export CUDA_HOME=$MAMBA_ROOT_PREFIX/envs/olmo
 export C_INCLUDE_PATH=$CUDA_HOME/targets/x86_64-linux/include:$C_INCLUDE_PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib:$LD_LIBRARY_PATH
-export TORCH_CUDA_ARCH_LIST="hopper"
 export OMP_NUM_THREADS=16
-export MKL_NUM_THREADS=16
-export NUMEXPR_NUM_THREADS=16
 
-# Set the master address and port for torch.distributed
-export MASTER_ADDR=$(scontrol show hostname $SLURM_NODELIST | head -n 1)
+# Set environment variables for distributed training
+MASTER_ADDR=$(scontrol show hostname "$SLURM_NODELIST" | head -n 1)
+export MASTER_ADDR
 export MASTER_PORT=29500
 
-# Enable Infiniband for NCCL
-export NCCL_IB_DISABLE=0
-
-# Launch OLMo training using torchrun
-srun torchrun \
-    --nnodes="$SLURM_NNODES" \
-    --nproc_per_node=8 \
-    --rdzv_backend=c10d \
-    --rdzv_endpoint="$MASTER_ADDR":"$MASTER_PORT" \
+# Launch OLMo training
+srun python \
     scripts/train.py \
-    configs/official-0724/OLMo-1B-Slurm.yaml \
+    configs/official-0724/OLMo-1B.yaml \
     --run_name="$SLURM_JOB_NAME"
 
 # Cleanup scratch directory after job completes
