@@ -1,11 +1,13 @@
 #!/bin/bash
 
 #SBATCH --job-name=olmo-1b-baseline
-#SBATCH --nodes=16
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=8
 #SBATCH --gpus-per-node=8
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=0
+#SBATCH --network=ib
+#SBATCH --exclusive
 #SBATCH --time=2:00:00
 #SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
 #SBATCH --error=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.err
@@ -37,8 +39,18 @@ MASTER_ADDR=$(scontrol show hostname "$SLURM_NODELIST" | head -n 1)
 export MASTER_ADDR
 export MASTER_PORT=29500
 
+# Set environment variables for NCCL
+export NCCL_DEBUG=INFO
+export NCCL_IB_TIMEOUT=23
+export NCCL_SOCKET_NTHREADS=8
+export NCCL_NSOCKS_PERTHREAD=8
+export NCCL_IB_DISABLE=0
+export NCCL_IB_GID_INDEX=3
+export NCCL_IB_HCA=mlx5
+
 # Launch OLMo training
-srun python \
+srun --cpu-bind=cores --gpu-bind=closest \
+    python \
     scripts/train.py \
     configs/official-0724/OLMo-1B.yaml \
     --run_name="$SLURM_JOB_NAME"
