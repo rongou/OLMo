@@ -365,7 +365,7 @@ if __name__ == "__main__":
     log.info(f"Multiprocessing start method set to '{mp.get_start_method()}'")
 
     if "SLURM_PROCID" in os.environ:  # We're in a Slurm cluster
-        os.environ["WORLD_SIZE"] = os.environ["SLURM_NTASKS"]
+        os.environ["WORLD_SIZE"] = os.environ["SLURM_NPROCS"]
         os.environ["RANK"] = os.environ["SLURM_PROCID"]
         os.environ["LOCAL_RANK"] = os.environ["SLURM_LOCALID"]
         print(f"Master addr: {os.environ.get('MASTER_ADDR')}")
