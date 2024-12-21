@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 from datetime import timedelta
-from pathlib import Path
+from pathlib import Path, PosixPath
 from typing import Optional, TextIO
 
 import torch
@@ -368,11 +368,7 @@ if __name__ == "__main__":
         os.environ["WORLD_SIZE"] = os.environ["SLURM_NPROCS"]
         os.environ["RANK"] = os.environ["SLURM_PROCID"]
         os.environ["LOCAL_RANK"] = os.environ["SLURM_LOCALID"]
-        print(f"Master addr: {os.environ.get('MASTER_ADDR')}")
-        print(f"Master port: {os.environ.get('MASTER_PORT')}")
-        print(f"World size: {get_world_size()}")
-        print(f"Rank: {get_global_rank()}")
-        print(f"Local rank: {get_local_rank()}")
+        torch.serialization.add_safe_globals([PosixPath])
 
     # Set CUDA device.
     torch.cuda.set_device(f"cuda:{get_local_rank()}")

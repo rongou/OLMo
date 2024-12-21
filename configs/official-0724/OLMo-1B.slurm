@@ -40,7 +40,7 @@ export MASTER_ADDR
 export MASTER_PORT=29500
 
 # Set environment variables for NCCL
-export NCCL_DEBUG=INFO
+export NCCL_DEBUG=WARN
 export NCCL_IB_TIMEOUT=23
 export NCCL_SOCKET_NTHREADS=8
 export NCCL_NSOCKS_PERTHREAD=8
