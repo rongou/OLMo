@@ -36,7 +36,7 @@ MASTER_PORT=$((10000 + ${SLURM_JOBID: -4}))
 export MASTER_ADDR
 export MASTER_PORT
 echo "MASTER_ADDR:MASTER_PORT=${MASTER_ADDR}:${MASTER_PORT}"
-￼
+
 # Launch OLMo training
 srun python \
   scripts/train.py \
