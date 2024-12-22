@@ -1,19 +1,18 @@
 #!/bin/bash
 
-#SBATCH --account=sw_aidot
-#SBATCH --chdir=/lustre/fsw/portfolios/sw/users/rou/src/OLMo
-#SBATCH --cpus-per-task=16
-#SBATCH --dependency=singleton
-#SBATCH --exclusive
-#SBATCH --gpus-per-node=8
 #SBATCH --job-name=olmo-1b
-#SBATCH --mem=0
+#SBATCH --dependency=singleton
 #SBATCH --nodes=16
-#SBATCH --ntasks-per-gpu=1
+#SBATCH --gpus-per-node=8
 #SBATCH --ntasks-per-node=8
-#SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
+#SBATCH --cpus-per-task=16
+#SBATCH --exclusive
+#SBATCH --mem=0
+#SBATCH --account=sw_aidot
 #SBATCH --partition=batch_short
 #SBATCH --time=0-2
+#SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
+#SBATCH --chdir=/lustre/fsw/portfolios/sw/users/rou/src/OLMo
 
 export NCCL_IB_SL=1
 export NCCL_IB_TIMEOUT=19
