@@ -1,19 +1,20 @@
 #!/bin/bash
 
-#SBATCH --job-name=olmo-1b
-#SBATCH --nodes=16
-#SBATCH --ntasks-per-node=8
+#SBATCH --account=sw_aidot
+#SBATCH --chdir=/lustre/fsw/portfolios/sw/users/rou/src/OLMo
+#SBATCH --cpus-per-task=16
+#SBATCH --dependency=singleton
 #SBATCH --exclusive
 #SBATCH --gpus-per-node=8
-#SBATCH --cpus-per-task=16
+#SBATCH --gpus-per-task=1
+#SBATCH --job-name=olmo-1b
 #SBATCH --mem=0
-#SBATCH --dependency=singleton
-#SBATCH --account=sw_aidot
-#SBATCH --partition=batch_short
-#SBATCH --time=2:00:00
+#SBATCH --nodes=16
+#SBATCH --ntasks-per-gpu=1
+#SBATCH --ntasks-per-node=8
 #SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
-#SBATCH --error=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.err
-#SBATCH --chdir=/lustre/fsw/portfolios/sw/users/rou/src/OLMo
+#SBATCH --partition=batch_short
+#SBATCH --time=0-2
 
 export NCCL_IB_SL=1
 export NCCL_IB_TIMEOUT=19
@@ -32,14 +33,13 @@ export OMP_NUM_THREADS=16
 
 # Set environment variables for distributed training
 MASTER_ADDR=$(scontrol show hostname "$SLURM_NODELIST" | head -n 1)
-MASTER_PORT=$(expr 10000 + $(echo -n "$SLURM_JOBID" | tail -c 4))
+MASTER_PORT=$((10000 + ${SLURM_JOBID: -4}))
 export MASTER_ADDR
 export MASTER_PORT
 echo "MASTER_ADDR:MASTER_PORT=${MASTER_ADDR}:${MASTER_PORT}"
 ￼
 # Launch OLMo training
-srun \
-    python \
-    scripts/train.py \
-    configs/official-0724/OLMo-1B.yaml \
-    --run_name="$SLURM_JOB_NAME"
+srun python \
+  scripts/train.py \
+  configs/official-0724/OLMo-1B.yaml \
+  --run_name="$SLURM_JOB_NAME"
