@@ -6,10 +6,10 @@
 #SBATCH --dependency=singleton
 #SBATCH --exclusive
 #SBATCH --gpus-per-node=8
-#SBATCH --gpus-per-task=1
 #SBATCH --job-name=olmo-1b
 #SBATCH --mem=0
 #SBATCH --nodes=16
+#SBATCH --ntasks-per-gpu=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
 #SBATCH --partition=batch_short
