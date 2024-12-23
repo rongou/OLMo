@@ -29,4 +29,5 @@ export NCCL_PROTO=simple
 export NCCL_SHM_DISABLE=1
 export UB_TIMEOUT=720
 
+# launch trainer directly
 python scripts/train.py --run_name="$SLURM_JOB_NAME"
