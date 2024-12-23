@@ -14,4 +14,4 @@
 #SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
 #SBATCH --chdir=/lustre/fsw/portfolios/sw/users/rou/src/OLMo
 
-srun -l direct.sh
+srun -l slurm/direct.sh
