@@ -2,7 +2,6 @@
 
 import gzip
 import logging
-import os
 import sys
 from datetime import timedelta
 from pathlib import Path
@@ -363,14 +362,6 @@ if __name__ == "__main__":
     except RuntimeError as e:
         print(f"failed to set multiprocessing start method: {e}")
     log.info(f"Multiprocessing start method set to '{mp.get_start_method()}'")
-
-    if "SLURM_PROCID" in os.environ:  # We're in a Slurm cluster
-        os.environ["WORLD_SIZE"] = os.environ["SLURM_NPROCS"]
-        os.environ["RANK"] = os.environ["SLURM_PROCID"]
-        os.environ["LOCAL_RANK"] = os.environ["SLURM_LOCALID"]
-        print(f"WORLD_SIZE={os.environ['WORLD_SIZE']}, "
-              f"RANK={os.environ['RANK']}, "
-              f"LOCAL_RANK={os.environ['LOCAL_RANK']}")
 
     # Set CUDA device.
     torch.cuda.set_device(f"cuda:{get_local_rank()}")
