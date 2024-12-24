@@ -7,7 +7,7 @@ set -euxo pipefail
 
 # Set environment variables for CUDA and OpenMP
 export CUDA_HOME=$MAMBA_ROOT_PREFIX/envs/olmo
-export C_INCLUDE_PATH=$CUDA_HOME/targets/x86_64-linux/include:$C_INCLUDE_PATH
+export C_INCLUDE_PATH=$CUDA_HOME/targets/x86_64-linux/include:${C_INCLUDE_PATH:-}
 export LD_LIBRARY_PATH=$CUDA_HOME/lib:$LD_LIBRARY_PATH
 
 # setup pytorch distributed
