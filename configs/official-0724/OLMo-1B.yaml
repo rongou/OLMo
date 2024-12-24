@@ -33,7 +33,8 @@ model:
   init_device: meta
   init_fn: mitchell
 
-compile: null
+compile:
+  mode: max-autotune
 
 optimizer:
   name: adamw
