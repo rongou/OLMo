@@ -27,6 +27,7 @@ function run_training() {
 
   # setup pytorch distributed
   export WORLD_SIZE=$SLURM_NTASKS
+  export LOCAL_WORLD_SIZE=$SLURM_NTASKS_PER_NODE
   export RANK=$SLURM_PROCID
   export LOCAL_RANK=$SLURM_LOCALID
   export MASTER_ADDR=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)
