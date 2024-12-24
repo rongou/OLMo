@@ -32,5 +32,5 @@ export UB_TIMEOUT=720
 # launch trainer directly
 cd /lustre/fsw/portfolios/sw/users/rou/src/OLMo
 python scripts/train.py\
- configs/offcial-0724/OLMo-1B.yaml\
+ configs/official-0724/OLMo-1B.yaml\
  --run_name="$SLURM_JOB_NAME"
