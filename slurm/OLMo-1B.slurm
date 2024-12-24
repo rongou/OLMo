@@ -10,7 +10,7 @@
 #SBATCH --mem=0
 #SBATCH --account=sw_aidot
 #SBATCH --partition=batch_short
-#SBATCH --time=2
+#SBATCH --time=0-2
 #SBATCH --output=/lustre/fsw/portfolios/sw/users/rou/logs/%x_%j.out
 #SBATCH --chdir=/lustre/fsw/portfolios/sw/users/rou/src/OLMo
 
