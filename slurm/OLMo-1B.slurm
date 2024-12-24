@@ -45,7 +45,7 @@ function run_training() {
 
   # launch trainer directly
   cd /lustre/fsw/portfolios/sw/users/rou/src/OLMo
-  python scripts/train.py \
+  python -W ignore::FutureWarning scripts/train.py \
       configs/official-0724/OLMo-1B.yaml \
       --run_name="$SLURM_JOB_NAME"
 }
