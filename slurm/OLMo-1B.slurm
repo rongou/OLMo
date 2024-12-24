@@ -33,15 +33,27 @@ function run_training() {
   export MASTER_PORT=6000
 
   # add some magic incantations
-  export CUDA_DEVICE_MAX_CONNECTIONS=1
-  export NCCL_DEBUG=WARN
   export NCCL_IB_SL=1
   export NCCL_IB_TIMEOUT=19
-  export NCCL_NVLS_ENABLE=0
-  export NCCL_P2P_NET_CHUNKSIZE=2097152
-  export NCCL_PROTO=simple
-  export NCCL_SHM_DISABLE=1
   export UB_TIMEOUT=720
+  export CUDA_DEVICE_MAX_CONNECTIONS=1
+  export NVTE_FWD_LAYERNORM_SM_MARGIN=16
+  export NVTE_BWD_LAYERNORM_SM_MARGIN=16
+  export NVTE_FUSED_ATTN=0  # Disable cuDNN fused attention.
+  export NCCL_P2P_NET_CHUNKSIZE=2097152
+  export NCCL_DEBUG=WARN
+
+  export NCCL_SHM_DISABLE=1
+  export NCCL_PROTO=simple
+  export NCCL_NVLS_ENABLE=0
+
+  export NCCL_IB_DISABLE=0
+  export NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_5,mlx5_6,mlx5_7,mlx5_8
+  export NCCL_IB_GID_INDEX=3
+  export NCCL_IB_TC=96
+  export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+  export MELLANOX_VISIBLE_DEVICES=0,1,2,3,5,6,7,8
+  export NCCL_SOCKET_IFNAME=enp90s0np0
 
   # ignore some warnings
   export PYTHONWARNINGS="ignore::FutureWarning,ignore::UserWarning"
